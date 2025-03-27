@@ -6,7 +6,7 @@ import NotFound from "@/pages/not-found";
 import Booking from "@/pages/Booking";
 import AdminLogin from "@/pages/AdminLogin";
 import AdminDashboard from "@/pages/AdminDashboard";
-import { AuthProvider } from "./lib/auth.tsx";
+import { AuthProvider } from "./lib/auth";
 
 function Router() {
   return (
