@@ -8,9 +8,27 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
-import { CalendarIcon, ScissorsIcon, LogOutIcon, PawPrintIcon } from "lucide-react";
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogDescription, 
+  DialogHeader, 
+  DialogTitle, 
+  DialogTrigger 
+} from "@/components/ui/dialog";
+import { 
+  CalendarIcon, 
+  ScissorsIcon, 
+  LogOutIcon, 
+  PawPrintIcon, 
+  PlusCircleIcon,
+  PhoneIcon,
+  UsersIcon
+} from "lucide-react";
 import { Appointment, Service } from "@shared/schema";
 import { AdminCalendar } from "@/components/AdminCalendar";
+import { AdminBookingForm } from "@/components/AdminBookingForm";
+import { StaffCapacityManager } from "@/components/StaffCapacityManager";
 
 export default function AdminDashboard() {
   const [, navigate] = useLocation();
@@ -98,8 +116,61 @@ export default function AdminDashboard() {
     }
   };
   
+  // State for managing the new booking dialog
+  const [bookingDialogOpen, setBookingDialogOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date>();
+  const [selectedTime, setSelectedTime] = useState<string>();
+
+  // Function to close the dialog and refresh appointments
+  const handleBookingSuccess = () => {
+    setBookingDialogOpen(false);
+    // No need to invalidate queries as the mutation in AdminBookingForm does this
+  };
+
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col relative">
+      {/* Floating Action Button for quick booking */}
+      <Dialog open={bookingDialogOpen} onOpenChange={setBookingDialogOpen}>
+        <div className="fixed right-8 bottom-8 z-40">
+          <DialogTrigger asChild>
+            <Button 
+              size="lg" 
+              className="h-14 w-14 rounded-full shadow-lg"
+            >
+              <PlusCircleIcon className="h-6 w-6" />
+              <span className="sr-only">Add Walk-in Booking</span>
+            </Button>
+          </DialogTrigger>
+        </div>
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle className="text-xl">Add Walk-in or Phone Booking</DialogTitle>
+            <DialogDescription>
+              Fill out this form to book an appointment for a walk-in customer or phone call.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="mt-6">
+            <AdminBookingForm 
+              onSuccess={handleBookingSuccess} 
+              onDateTimeChange={(date, time) => {
+                setSelectedDate(date);
+                setSelectedTime(time);
+              }}
+            />
+          </div>
+          
+          {selectedDate && selectedTime && (
+            <div className="mt-4">
+              <StaffCapacityManager 
+                date={selectedDate} 
+                time={selectedTime} 
+              />
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+      
       {/* Navigation */}
       <nav className="bg-primary-800 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -109,9 +180,46 @@ export default function AdminDashboard() {
                 <PawPrintIcon className="inline-block mr-2 h-5 w-5" /> PawPerfect Admin
               </span>
             </div>
-            <Button variant="ghost" className="text-white" onClick={handleLogout}>
-              <LogOutIcon className="mr-2 h-4 w-4" /> Logout
-            </Button>
+            <div className="flex items-center space-x-4">
+              <Dialog open={bookingDialogOpen} onOpenChange={setBookingDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" className="text-white border-white hover:bg-primary-700">
+                    <PhoneIcon className="mr-2 h-4 w-4" /> Add Walk-in Booking
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-3xl">
+                  <DialogHeader>
+                    <DialogTitle className="text-xl">Add Walk-in or Phone Booking</DialogTitle>
+                    <DialogDescription>
+                      Fill out this form to book an appointment for a walk-in customer or phone call.
+                    </DialogDescription>
+                  </DialogHeader>
+                  
+                  <div className="mt-6">
+                    <AdminBookingForm 
+                      onSuccess={handleBookingSuccess} 
+                      onDateTimeChange={(date, time) => {
+                        setSelectedDate(date);
+                        setSelectedTime(time);
+                      }}
+                    />
+                  </div>
+                  
+                  {selectedDate && selectedTime && (
+                    <div className="mt-4">
+                      <StaffCapacityManager 
+                        date={selectedDate} 
+                        time={selectedTime} 
+                      />
+                    </div>
+                  )}
+                </DialogContent>
+              </Dialog>
+              
+              <Button variant="ghost" className="text-white" onClick={handleLogout}>
+                <LogOutIcon className="mr-2 h-4 w-4" /> Logout
+              </Button>
+            </div>
           </div>
         </div>
       </nav>

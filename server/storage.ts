@@ -177,17 +177,52 @@ export class MemStorage implements IStorage {
       await this.createUser(userData);
 
       // Add default staff for the business
-      const staffData = {
-        businessId: business.id,
-        name: "Jane Smith",
-        title: "Lead Groomer",
-        email: "jane@petgroomingsalon.com",
-        phone: "555-987-6543",
-        bio: "Over 5 years of experience with all breeds",
-        imageUrl: null,
-        active: true
-      };
-      await this.createStaff(staffData);
+      const defaultStaff = [
+        {
+          businessId: business.id,
+          name: "Jane Smith",
+          title: "Lead Groomer",
+          email: "jane@petgroomingsalon.com",
+          phone: "555-987-6543",
+          bio: "Over 5 years of experience with all breeds",
+          imageUrl: null,
+          active: true
+        },
+        {
+          businessId: business.id,
+          name: "Mike Johnson",
+          title: "Senior Groomer",
+          email: "mike@petgroomingsalon.com",
+          phone: "555-876-5432",
+          bio: "Specialized in handling nervous and anxious pets",
+          imageUrl: null,
+          active: true
+        },
+        {
+          businessId: business.id,
+          name: "Sarah Williams",
+          title: "Groomer",
+          email: "sarah@petgroomingsalon.com",
+          phone: "555-765-4321",
+          bio: "Expert in creative styling and show cuts",
+          imageUrl: null,
+          active: true
+        },
+        {
+          businessId: business.id,
+          name: "Carlos Rodriguez",
+          title: "Junior Groomer",
+          email: "carlos@petgroomingsalon.com",
+          phone: "555-654-3210",
+          bio: "New talent with great attention to detail",
+          imageUrl: null,
+          active: true
+        }
+      ];
+      
+      for (const staff of defaultStaff) {
+        await this.createStaff(staff);
+      }
 
       // Add default services for the business
       const defaultServices = [
