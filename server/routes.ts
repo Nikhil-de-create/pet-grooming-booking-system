@@ -12,6 +12,24 @@ import {
 } from "@shared/schema";
 import { fromZodError } from "zod-validation-error";
 
+// Helper function to safely get authenticated user
+const getAuthenticatedUser = async (req: Request): Promise<{ user: any, userId: number } | null> => {
+  if (!req.session || !req.session.userId) {
+    return null;
+  }
+  
+  try {
+    const user = await storage.getUser(req.session.userId);
+    if (!user) {
+      return null;
+    }
+    return { user, userId: req.session.userId };
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    return null;
+  }
+};
+
 // Middleware to check if user is authenticated
 const isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
   if (req.session && req.session.userId) {
@@ -247,13 +265,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get all appointments for the business
   app.get("/api/admin/appointments", isAuthenticated, isAdmin, async (req: Request, res: Response) => {
     try {
-      const user = await storage.getUser(req.session!.userId);
+      const authResult = await getAuthenticatedUser(req);
       
-      if (!user || !user.businessId) {
+      if (!authResult || !authResult.user.businessId) {
         return res.status(400).json({ message: "No business associated with this user" });
       }
       
-      const appointments = await storage.getAppointments(user.businessId);
+      const appointments = await storage.getAppointments(authResult.user.businessId);
       res.json(appointments);
     } catch (error) {
       console.error("Error fetching appointments:", error);
