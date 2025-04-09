@@ -2,6 +2,10 @@ import type { Express, Request, Response, NextFunction } from "express";
 // Import TypeScript declaration augmentation for express-session
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import fs from "fs";
+import path from "path";
+import { dirname } from "path";
+import { fileURLToPath } from "url";
 import { 
   insertAppointmentSchema, 
   insertBusinessSchema, 

@@ -4,6 +4,7 @@ import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { storage } from "./storage";
 import connectPgSimple from "connect-pg-simple";
+import { staticRouter } from "./static-route";
 
 const app = express();
 app.use(express.json());
@@ -63,6 +64,9 @@ app.use((req, res, next) => {
 (async () => {
   // Initialize database with default data if empty
   await (storage as any).initializeDefaultData();
+  
+  // Register static routes before other routes
+  app.use(staticRouter);
   
   // Register routes
   const server = await registerRoutes(app);
