@@ -3,88 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';" />
-    <title>Pet Grooming Booking</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #f9f9f9;
-      }
-      .container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-        padding: 20px;
-        text-align: center;
-      }
-      h1 {
-        color: #4f46e5;
-        margin-bottom: 10px;
-      }
-      p {
-        color: #4b5563;
-        max-width: 600px;
-        line-height: 1.5;
-      }
-      .services {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 20px;
-        margin-top: 30px;
-      }
-      .service-card {
-        background-color: white;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        padding: 20px;
-        width: 250px;
-        text-align: left;
-      }
-      .service-card h3 {
-        color: #1f2937;
-        margin-top: 0;
-      }
-      .service-card p {
-        font-size: 14px;
-      }
-      .price {
-        color: #4f46e5;
-        font-weight: bold;
-        font-size: 18px;
-      }
-    </style>
   </head>
   <body>
-    <div class="container">
-      <h1>Pet Grooming Services</h1>
-      <p>Welcome to our pet grooming service! We provide professional care for your furry friends.</p>
-      
-      <div class="services">
-        <div class="service-card">
-          <h3>Basic Bath & Brush</h3>
-          <p>A gentle cleansing bath followed by a thorough brushing to remove loose fur.</p>
-          <p class="price">$30</p>
-        </div>
-        
-        <div class="service-card">
-          <h3>Full Grooming</h3>
-          <p>Complete service including bath, haircut, nail trimming, ear cleaning, and more.</p>
-          <p class="price">$60</p>
-        </div>
-        
-        <div class="service-card">
-          <h3>Nail Trimming</h3>
-          <p>Professional nail trimming to maintain your pet's paw health.</p>
-          <p class="price">$15</p>
-        </div>
-      </div>
-      
-      <p style="margin-top: 30px;">This is a static HTML page. The React application is currently unavailable.</p>
-    </div>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

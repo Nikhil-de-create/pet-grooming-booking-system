@@ -2,10 +2,6 @@ import type { Express, Request, Response, NextFunction } from "express";
 // Import TypeScript declaration augmentation for express-session
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import fs from "fs";
-import path from "path";
-import { dirname } from "path";
-import { fileURLToPath } from "url";
 import { 
   insertAppointmentSchema, 
   insertBusinessSchema, 
@@ -114,34 +110,6 @@ const getBusinessId = async (req: Request, res: Response, next: NextFunction) =>
 export async function registerRoutes(app: Express): Promise<Server> {
   // ==================== PUBLIC API ROUTES ====================
   
-  // Get all businesses
-  app.get("/api/businesses", async (req: Request, res: Response) => {
-    try {
-      const businesses = await storage.getBusinesses();
-      // Only expose non-sensitive information
-      const safeBusiness = businesses.map(business => {
-        const { id, name, slug, description, logoUrl, city, state, phone, email, website, colors } = business;
-        return {
-          id,
-          name,
-          slug,
-          description,
-          logoUrl,
-          city,
-          state,
-          phone,
-          email,
-          website,
-          colors
-        };
-      });
-      res.json(safeBusiness);
-    } catch (error) {
-      console.error("Error fetching businesses:", error);
-      res.status(500).json({ message: "Error fetching businesses" });
-    }
-  });
-
   // Get business information by slug
   app.get("/api/businesses/:slug", async (req: Request, res: Response) => {
     try {

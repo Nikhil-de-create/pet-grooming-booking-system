@@ -8,31 +8,12 @@ import AdminLogin from "@/pages/AdminLogin";
 import AdminDashboard from "@/pages/AdminDashboard";
 import { AuthProvider } from "./lib/auth";
 
-// Simple component to display while the app is loading resources
-function LoadingPage() {
-  return (
-    <div style={{ 
-      display: 'flex', 
-      flexDirection: 'column', 
-      alignItems: 'center', 
-      justifyContent: 'center', 
-      height: '100vh', 
-      fontFamily: 'Arial, sans-serif',
-      background: 'white'
-    }}>
-      <h1>Loading Pet Grooming App</h1>
-      <p>Please wait while we set up your experience...</p>
-    </div>
-  );
-}
-
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Booking} />
       <Route path="/admin/login" component={AdminLogin} />
       <Route path="/admin/dashboard" component={AdminDashboard} />
-      <Route path="/loading" component={LoadingPage} />
       <Route component={NotFound} />
     </Switch>
   );

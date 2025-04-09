@@ -2,31 +2,18 @@ import express, { type Request, Response, NextFunction } from "express";
 import session from "express-session";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
-import { storage } from "./storage";
-import connectPgSimple from "connect-pg-simple";
-import { staticRouter } from "./static-route";
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Use PostgreSQL for session storage
-const PgSession = connectPgSimple(session);
-
 // Configure session middleware
 app.use(session({
-  store: new PgSession({
-    conObject: {
-      connectionString: process.env.DATABASE_URL,
-    },
-    createTableIfMissing: true, // Create the session table if it doesn't exist
-  }),
   secret: "pet-grooming-app-secret",
   resave: false,
   saveUninitialized: false,
   cookie: { 
-    secure: process.env.NODE_ENV === 'production', // Only use secure cookies in production
-    sameSite: 'lax', // Helps with cross-site request issues
+    secure: false, // set to true if using https
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }
 }));
@@ -62,13 +49,6 @@ app.use((req, res, next) => {
 });
 
 (async () => {
-  // Initialize database with default data if empty
-  await (storage as any).initializeDefaultData();
-  
-  // Register static routes before other routes
-  app.use(staticRouter);
-  
-  // Register routes
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
