@@ -5,8 +5,11 @@ import {
   Business, InsertBusiness,
   Staff, InsertStaff,
   Plan, InsertPlan,
-  Subscription, InsertSubscription
+  Subscription, InsertSubscription,
+  users, services, appointments, businesses, staff, plans, subscriptions,
 } from "@shared/schema";
+import { db } from "./db";
+import { eq, asc, and, desc, isNull } from "drizzle-orm";
 
 export interface IStorage {
   // Business operations
@@ -603,4 +606,8 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+// Import the DatabaseStorage class
+import { DatabaseStorage } from './database-storage';
+
+// Use DatabaseStorage instead of MemStorage
+export const storage = new DatabaseStorage();

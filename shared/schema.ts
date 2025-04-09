@@ -1,6 +1,7 @@
 import { pgTable, text, serial, integer, timestamp, boolean, varchar, foreignKey } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+import { relations } from "drizzle-orm";
 
 // Business schema for multi-tenant SaaS model
 export const businesses = pgTable("businesses", {
@@ -188,3 +189,65 @@ export type Plan = typeof plans.$inferSelect;
 
 export type InsertSubscription = z.infer<typeof insertSubscriptionSchema>;
 export type Subscription = typeof subscriptions.$inferSelect;
+
+// Define relations
+export const businessesRelations = relations(businesses, ({ many }) => ({
+  users: many(users),
+  services: many(services),
+  staff: many(staff),
+  appointments: many(appointments),
+  subscriptions: many(subscriptions),
+}));
+
+export const usersRelations = relations(users, ({ one }) => ({
+  business: one(businesses, {
+    fields: [users.businessId],
+    references: [businesses.id],
+  }),
+}));
+
+export const servicesRelations = relations(services, ({ one, many }) => ({
+  business: one(businesses, {
+    fields: [services.businessId],
+    references: [businesses.id],
+  }),
+  appointments: many(appointments),
+}));
+
+export const staffRelations = relations(staff, ({ one, many }) => ({
+  business: one(businesses, {
+    fields: [staff.businessId],
+    references: [businesses.id],
+  }),
+  appointments: many(appointments),
+}));
+
+export const appointmentsRelations = relations(appointments, ({ one }) => ({
+  business: one(businesses, {
+    fields: [appointments.businessId],
+    references: [businesses.id],
+  }),
+  service: one(services, {
+    fields: [appointments.serviceId],
+    references: [services.id],
+  }),
+  assignedStaff: one(staff, {
+    fields: [appointments.staffId],
+    references: [staff.id],
+  }),
+}));
+
+export const plansRelations = relations(plans, ({ many }) => ({
+  subscriptions: many(subscriptions),
+}));
+
+export const subscriptionsRelations = relations(subscriptions, ({ one }) => ({
+  business: one(businesses, {
+    fields: [subscriptions.businessId],
+    references: [businesses.id],
+  }),
+  plan: one(plans, {
+    fields: [subscriptions.planId],
+    references: [plans.id],
+  }),
+}));
